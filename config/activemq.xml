@@ -26,7 +26,7 @@
         </managementContext>
 
         <persistenceAdapter>
-            <kahaDB directory="${spring.activemq.data}/amq-broker/KahaDB"/>
+            <kahaDB directory="${spring.activemq.data}/${spring.activemq.broker-name}/KahaDB"/>
         </persistenceAdapter>
 
         <systemUsage>
