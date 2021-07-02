@@ -1,0 +1,38 @@
+<configuration scan="true">
+  <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+  <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+
+  <!--  <property name="FILE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN}"/>-->
+  <property name="FILE_LOG_PATTERN" value="%d{ISO8601} | %highlight(%-5.5p) | %-16.16t | %-32.32c{1} | %-32.32C %4L | RouteId: %X{camel.routeId} | %m%n"/>
+  <!--  <property name="FILE_LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %logger{36} - %msg%n"/>-->
+  <!--  <property name="FILE_LOG_PATTERN" value="%d{ISO8601} | %highlight(%-5.5p) | %-16.16t | %-32.32c{1} | %-32.32C %4L | %m%n"/>-->
+  <!--  <property name="FILE_LOG_PATTERN" value="%d{ISO8601} | %highlight(%-5.5p) | %-16.16t | %-32.32c{1} | %-32.32C %4L | ContextID: %X{camel.contextId} | RouteId: %X{camel.routeId} | %m%n"/>-->
+  <!--  <property name="FILE_LOG_PATTERN" value="%d{ISO8601} | %highlight(%-5.5p) | %-16.16t | %-32.32c{1} | %-32.32C %4L | RouteId: %X{camel.routeId} | %m%n"/>-->
+  <!--  <property name="FILE_LOG_PATTERN" value="[%-5p] | - %m%n"/>-->
+  <!--  <property name="FILE_LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>-->
+  <!--  <property name="FILE_LOG_PATTERN" value="[%-5p] [%c{1}.%M\(\):%L] | - %m%n"/>  -->
+
+  <!--<springProfile name="test">
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <root level="INFO">
+      <appender-ref ref="CONSOLE" />
+    </root>
+  </springProfile>-->
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+  <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+
+  <logger name="edu.si" level="INFO"/>
+  <logger name="org.apache.activemq" level="INFO"/>
+  <logger name="org.apache.http" level="INFO"/>
+  <logger name="org.apache.commons.httpclient" level="INFO"/>
+  <logger name="org.apache.http.headers" level="INFO"/>
+  <logger name="org.springframework" level="INFO" />
+
+  <root level="INFO">
+    <appender-ref ref="FILE" />
+    <appender-ref ref="CONSOLE" />
+  </root>
+
+</configuration>
