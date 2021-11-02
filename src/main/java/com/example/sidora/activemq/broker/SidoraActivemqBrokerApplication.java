@@ -1,6 +1,7 @@
 package com.example.sidora.activemq.broker;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.activemq.broker.BrokerPlugin;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.broker.TransportConnector;
 import org.apache.activemq.broker.region.policy.ConstantPendingMessageLimitStrategy;
@@ -8,6 +9,9 @@ import org.apache.activemq.broker.region.policy.PolicyEntry;
 import org.apache.activemq.broker.region.policy.PolicyMap;
 import org.apache.activemq.filter.DestinationMapEntry;
 import org.apache.activemq.hooks.SpringContextHook;
+import org.apache.activemq.security.AuthenticationUser;
+import org.apache.activemq.security.JaasAuthenticationPlugin;
+import org.apache.activemq.security.SimpleAuthenticationPlugin;
 import org.apache.activemq.usage.MemoryUsage;
 import org.apache.activemq.usage.StoreUsage;
 import org.apache.activemq.usage.SystemUsage;
@@ -64,6 +68,10 @@ public class SidoraActivemqBrokerApplication {
         @NotNull
         private String data;
 
+        private String user;
+
+        private String password;
+
         public String getBrokerName() {
             return brokerName;
         }
@@ -78,6 +86,22 @@ public class SidoraActivemqBrokerApplication {
 
         public void setData(String data) {
             this.data = data;
+        }
+
+        public String getUser() {
+            return user;
+        }
+
+        public void setUser(String user) {
+            this.user = user;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
         }
 
         @Bean(initMethod = "start", destroyMethod = "stop")
@@ -103,6 +127,21 @@ public class SidoraActivemqBrokerApplication {
             systemUsage.setStoreUsage(storeUsage);
             systemUsage.setTempUsage(tempUsage);
             broker.setSystemUsage(systemUsage);
+
+            // add plugins before connectors or they will not be initialized
+            List<AuthenticationUser> users = new ArrayList<>();
+            users.add(new AuthenticationUser(user, password, "users,admins"));
+
+            SimpleAuthenticationPlugin authenticationPlugin = new SimpleAuthenticationPlugin();
+            authenticationPlugin.setUsers(users);
+            authenticationPlugin.setAnonymousAccessAllowed(false);
+            broker.setPlugins(new BrokerPlugin[] {authenticationPlugin});
+
+            /* Adds a JAAS based authentication security plugin
+               if the java.security.auth.login.config system property is not defined then
+               it is set to the location of the login.config file on the classpath
+             */
+            //broker.setPlugins(new BrokerPlugin[]{new JaasAuthenticationPlugin()});
 
             /*DOS protection, limit concurrent connections to 1000 and frame size to 100MB*/
             TransportConnector transportConnector = new TransportConnector();

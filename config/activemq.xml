@@ -9,6 +9,16 @@
             dataDirectory="${spring.activemq.data}"
             start="true">
 
+        <plugins>
+            <simpleAuthenticationPlugin anonymousAccessAllowed="false">
+                <users>
+                    <authenticationUser username="${spring.activemq.user}" password="${spring.activemq.password}" groups="users,admins"/>
+                </users>
+            </simpleAuthenticationPlugin>
+
+            <!--<jaasAuthenticationPlugin configuration="karaf" />-->
+        </plugins>
+
         <destinationPolicy>
             <policyMap>
               <policyEntries>
